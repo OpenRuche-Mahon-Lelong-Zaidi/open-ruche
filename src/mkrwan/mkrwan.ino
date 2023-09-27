@@ -10,19 +10,25 @@ String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 
 #define DHTPIN 4
 #define DHTTYPE DHT11
-#define ONE_WIRE_BUS 10
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
+#define ONE_WIRE_BUS_1 10
+#define ONE_WIRE_BUS_2 9
 
+OneWire oneWire1(ONE_WIRE_BUS_1);
+OneWire oneWire2(ONE_WIRE_BUS_2);
+DallasTemperature sensors1(&oneWire1);
+DallasTemperature sensors2(&oneWire2);
 DHT dht(DHTPIN, DHTTYPE);
+
 bool connected;
 int err_count;
 short con;
+
 void setup() {
    Serial.begin(115200);
-   sensors.begin(); // Init DS18B20 temp sensor
+   sensors1.begin(); // Init DS18B20 temp sensor n1
+   sensors2.begin(); // Init DS18B20 temp sensor n2
    while (!Serial);
-   Serial.println("Welcome to MKR WAN 1300/1310 ");
+   Serial.println("Carte MKRWAN n°11 connectée !\nTentative de connexion à l'application TTN...");
    modem.begin(EU868);
    dht.begin();
    delay(1000);      // apparently the murata dislike if this tempo is removed...
@@ -32,8 +38,10 @@ void setup() {
 }
 
 void loop() {
-   sensors.requestTemperatures();
-   float ds18b20Temperature = sensors.getTempCByIndex(0);
+   sensors1.requestTemperatures();
+   sensors2.requestTemperatures();
+   float ds18b20Temperature_1 = sensors1.getTempCByIndex(0);
+   float ds18b20Temperature_2 = sensors2.getTempCByIndex(0);
    short dhtTemperature;
    short dhtHumidity;
    if ( !connected ) {
@@ -58,10 +66,12 @@ void loop() {
     modem.beginPacket();
     Serial.println("Temperature DHT11 = " + String(dhtTemperature) +" °C");
     Serial.println("Humidite DHT11 = " + String(dhtHumidity) +" %");
-    Serial.println("Temperature DS18B20 = " + String(short(ds18b20Temperature)) + " °C");
+    Serial.println("Temperature DS18B20 (1) = " + String(short(ds18b20Temperature_1)) + " °C");
+    Serial.println("Temperature DS18B20 (2) = " + String(short(ds18b20Temperature_2)) + " °C");
     modem.write(dhtTemperature);
     modem.write(dhtHumidity);   
-    modem.write((short)ds18b20Temperature);
+    modem.write((short)ds18b20Temperature_1);
+    modem.write((short)ds18b20Temperature_2);
     err = modem.endPacket();
     
     if ( err <= 0 ) {
