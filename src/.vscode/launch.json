@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/gregoiremahon/Library/Mobile Documents/com~apple~CloudDocs/Etudes/EI2I 4/Projet_Long_1_S7/open-ruche/src",
+      "program": "/Users/gregoiremahon/Library/Mobile Documents/com~apple~CloudDocs/Etudes/EI2I 4/Projet_Long_1_S7/open-ruche/src/build/Debug/outDebug"
+    }
+  ]
+}
