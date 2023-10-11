@@ -65,8 +65,9 @@ void displayWeight() {
     Serial.print("[INFO] ");
     float weight_units = scale.get_units(10);
     if (weight_units < 0) weight_units = 0.00;
-    long weight_grams = (long)(weight_units * 10); // Precision de 100g
-    Serial.println("Poids mesuré = " + String(weight_grams) + " grammes x 100 (en float : " + String(weight_units) + " g).");
+    float ounces = weight_units * 0.035274;
+    long weight_grams = (long)(ounces * 100); // Multiplier par 100 pour une précision au dixième de gramme
+    Serial.println("Poids mesuré = " + String(weight_grams / 100.0) + " grammes");
 }
 
 void displayTemperatures() {
@@ -115,16 +116,14 @@ int sendLoRaPacket() {
     short dhtHumidity = short(dht.readHumidity());
     float weight_units = scale.get_units(10);
     if (weight_units < 0) weight_units = 0.00;
-    long weight_grams = (long)(weight_units * 10); // 100g precision
+    short ounces = (weight_units * 0.035274) / 10;
+    Serial.println("poids envoyé : " + String(ounces) + " g");
     modem.beginPacket();
     modem.write(dhtTemp);
     modem.write(dhtHumidity);
     modem.write((short)ds18b20Temp1);
     modem.write((short)ds18b20Temp2);
-    modem.write((weight_grams >> 24) & 0xFF);   // octet le plus significatif
-    modem.write((weight_grams >> 16) & 0xFF);   // deuxième octet le plus significatif
-    modem.write((weight_grams >> 8) & 0xFF);    // troisième octet le plus significatif
-    modem.write(weight_grams & 0xFF);           // octet le moins significatif
+    modem.write((short)ounces);
     return modem.endPacket();
 }
 
