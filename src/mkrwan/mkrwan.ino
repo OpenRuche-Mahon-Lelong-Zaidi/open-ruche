@@ -13,8 +13,8 @@ String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 #define DHTTYPE DHT11
 #define ONE_WIRE_BUS_1 10
 #define ONE_WIRE_BUS_2 9
-#define DOUT_PIN 11
-#define CLK_PIN 12
+#define DOUT_PIN 13
+#define CLK_PIN 14
 
 OneWire oneWire1(ONE_WIRE_BUS_1);
 OneWire oneWire2(ONE_WIRE_BUS_2);
@@ -27,16 +27,24 @@ HX711 scale;
 bool connected;
 int err_count;
 short con;
+float calibration_factor = 1.045;
+float units;
+float ounces;
 
 void setup() {
+  
    Serial.begin(115200);
+   Serial.println("Carte MKRWAN n°11 connectée !\nTentative de connexion à l'application TTN...");
    sensors1.begin(); // Init DS18B20 temp sensor n1
    sensors2.begin(); // Init DS18B20 temp sensor n2
-   scale.begin(DOUT_PIN, CLK_PIN);
+   scale.begin(DOUT_PIN, CLK_PIN); // DT, CLK - Pins specified here
+   scale.set_scale();
    scale.tare();
-   float calibration_factor = -10707.50;
+   long zero_factor = scale.read_average();
    scale.set_scale(calibration_factor);
+   
    while (!Serial);
+   
    Serial.println("Carte MKRWAN n°11 connectée !\nTentative de connexion à l'application TTN...");
    modem.begin(EU868);
    dht.begin();
@@ -44,18 +52,19 @@ void setup() {
    connected=false;
    err_count=0;
    con =0;
-   float weight = scale.get_units(10);
-   Serial.println("Poids = " + String(weight) + " g");
-   // Mesure du poids
-   Serial.println("Tare effectué, monte Armand"); 
-   delay(10000); // Attendre 10 secondes pour qu'Armand monte
-   Serial.println("Mesure en cours...");
-   weight = scale.get_units(10);
-   Serial.println("Poids = " + String(weight) + " g");
-   delay(5000); // Attendre 5 secondes avant de continuer
+   
 }
 
 void loop() {
+
+   // Affichage de la température sur le moniteur série
+   Serial.print("[INFO] Poids mesuré : ");
+   units = scale.get_units(), 10;
+   if (units < 0) { units = 0.00; }
+   ounces = units * 0.035274;
+   Serial.print(ounces);
+   Serial.print(" grams"); 
+   Serial.println();
    sensors1.requestTemperatures();
    sensors2.requestTemperatures();
    float ds18b20Temperature_1 = sensors1.getTempCByIndex(0);
