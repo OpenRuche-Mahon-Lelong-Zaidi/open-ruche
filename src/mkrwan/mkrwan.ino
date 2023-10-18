@@ -10,7 +10,10 @@ String appEui = "1322144234234235";
 String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 
 int DHT_PIN = 4;
+int DHT2_PIN = 3;
+int DHT3_PIN = 2;
 int DHT_TYPE = DHT11;
+int DHT3_TYPE = DHT22;
 int ONE_WIRE_BUS_1 = 10;
 int ONE_WIRE_BUS_2 = 9;
 int DOUT_PIN = 13;
@@ -21,6 +24,8 @@ OneWire oneWire2(ONE_WIRE_BUS_2);
 DallasTemperature sensors1(&oneWire1);
 DallasTemperature sensors2(&oneWire2);
 DHT dht(DHT_PIN, DHT_TYPE);
+DHT dht2(DHT2_PIN, DHT_TYPE);
+DHT dht3(DHT3_PIN, DHT3_TYPE);
 HX711 scale;
 
 bool connected = false;
@@ -54,6 +59,8 @@ void initSensors() {
     scale.tare();
     scale.set_scale(CALIBRATION_FACTOR);
     dht.begin();
+    dht2.begin();
+    dht3.begin();
 }
 
 void initModem() {
@@ -76,9 +83,17 @@ void displayTemperatures() {
     float ds18b20Temp1 = sensors1.getTempCByIndex(0);
     float ds18b20Temp2 = sensors2.getTempCByIndex(0);
     short dhtTemp = short(dht.readTemperature());
+    short dht2Temp = short(dht2.readTemperature());
+    short dht3Temp = short(dht3.readTemperature());
     short dhtHumidity = short(dht.readHumidity());
-    Serial.println("[INFO] Temperature DHT11 = " + String(dhtTemp) + " °C");
-    Serial.println("[INFO] Humidite DHT11 = " + String(dhtHumidity) + " %");
+    short dht2Humidity = short(dht2.readHumidity());
+    short dht3Humidity = short(dht3.readHumidity());
+    Serial.println("[INFO] Temperature DHT11 1 = " + String(dhtTemp) + " °C");
+    Serial.println("[INFO] Temperature DHT11 2 = " + String(dht2Temp) + " °C");
+    Serial.println("[INFO] Temperature DHT11 3 = " + String(dht3Temp) + " °C");
+    Serial.println("[INFO] Humidite DHT11 1 = " + String(dhtHumidity) + " %");
+    Serial.println("[INFO] Humidite DHT11 2 = " + String(dht2Humidity) + " %");
+    Serial.println("[INFO] Humidite DHT11 3 = " + String(dht3Humidity) + " %");
     Serial.println("[INFO] Temperature DS18B20 (1) = " + String(short(ds18b20Temp1)) + " °C");
     Serial.println("[INFO] Temperature DS18B20 (2) = " + String(short(ds18b20Temp2)) + " °C");
 }
@@ -113,7 +128,11 @@ int sendLoRaPacket() {
     float ds18b20Temp1 = sensors1.getTempCByIndex(0);
     float ds18b20Temp2 = sensors2.getTempCByIndex(0);
     short dhtTemp = short(dht.readTemperature());
+    short dht2Temp = short(dht2.readTemperature());
+    short dht3Temp = short(dht3.readTemperature());
     short dhtHumidity = short(dht.readHumidity());
+    short dht2Humidity = short(dht2.readHumidity());
+    short dht3Humidity = short(dht3.readHumidity());
     float weight_units = scale.get_units(10);
     if (weight_units < 0) weight_units = 0.00;
     short ounces = (weight_units * 0.035274) / 10;
@@ -124,6 +143,10 @@ int sendLoRaPacket() {
     modem.write((short)ds18b20Temp1);
     modem.write((short)ds18b20Temp2);
     modem.write((short)ounces);
+    modem.write(dht2Humidity);
+    modem.write(dht3Humidity);
+    modem.write(dht2Temp);
+    modem.write(dht3Temp);
     return modem.endPacket();
 }
 
