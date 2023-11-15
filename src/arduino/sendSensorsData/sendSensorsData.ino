@@ -19,6 +19,7 @@ int ONE_WIRE_BUS_2 = 9;
 int DOUT_PIN = 13;
 int CLK_PIN = 14;
 
+
 OneWire oneWire1(ONE_WIRE_BUS_1);
 OneWire oneWire2(ONE_WIRE_BUS_2);
 DallasTemperature sensors1(&oneWire1);
@@ -32,12 +33,51 @@ bool connected = false;
 int err_count = 0;
 short con = 0;
 const float CALIBRATION_FACTOR = 1.045;
+int LED_PIN = 5;
 
 void setup() {
     initSerial();
     initSensors();
+    initLed();
     initModem();
 }
+
+// Définition des durées pour le Morse de la LED pour dire "BEE"
+const int dotDuration = 150;  // Durée d'un point
+const int dashDuration = dotDuration * 3;  // Durée d'un trait (trois fois un point)
+const int elementSpace = dotDuration;  // Espace entre éléments d'une lettre
+const int letterSpace = dotDuration * 3;  // Espace entre lettres
+const int wordSpace = dotDuration * 7;  // Espace entre mots
+
+void toggleLed(int duration) {
+    digitalWrite(LED_PIN, HIGH);
+    delay(duration);
+    digitalWrite(LED_PIN, LOW);
+}
+
+void initLed() {
+    // Allumage de la LED en Morse pour dire "BEE"
+    Serial.println("INITIALISATION... BEE");
+    pinMode(LED_PIN, OUTPUT);
+
+    // Lettre B: "-..."
+    toggleLed(dashDuration);
+    delay(elementSpace);
+    toggleLed(dotDuration);
+    delay(elementSpace);
+    toggleLed(dotDuration);
+    delay(elementSpace);
+    toggleLed(dotDuration);
+    delay(letterSpace);
+
+    // Lettre E: "."
+    toggleLed(dotDuration);
+    delay(letterSpace);
+
+    // Lettre E: "."
+    toggleLed(dotDuration);
+}
+
 
 void loop() {
     displayWeight();
@@ -47,7 +87,7 @@ void loop() {
 
 void initSerial() {
     Serial.begin(115200);
-    while (!Serial);
+    //while (!Serial);
     Serial.println("Carte MKRWAN n°11 connectée !\nTentative de connexion à l'application TTN...");
 }
 
