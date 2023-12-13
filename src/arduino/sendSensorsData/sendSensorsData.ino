@@ -3,6 +3,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <HX711.h>
+#include <ArduinoLowPower.h>
 
 LoRaModem modem;
 
@@ -18,6 +19,7 @@ int ONE_WIRE_BUS_1 = 10;
 int ONE_WIRE_BUS_2 = 9;
 int DOUT_PIN = 13;
 int CLK_PIN = 14;
+int photoresistorPin = A1;
 
 
 OneWire oneWire1(ONE_WIRE_BUS_1);
@@ -25,9 +27,10 @@ OneWire oneWire2(ONE_WIRE_BUS_2);
 DallasTemperature sensors1(&oneWire1);
 DallasTemperature sensors2(&oneWire2);
 DHT dht(DHT_PIN, DHT_TYPE);
-DHT dht2(DHT2_PIN, DHT_TYPE);
-DHT dht3(DHT3_PIN, DHT3_TYPE);
+DHT dht2(DHT2_PIN, DHT3_TYPE); // DHT 22
+DHT dht3(DHT3_PIN, DHT3_TYPE); // DHT 22
 HX711 scale;
+
 
 bool connected = false;
 int err_count = 0;
@@ -83,6 +86,8 @@ void loop() {
     displayWeight();
     displayTemperatures();
     handleLoRaConnection();
+    //LowPower.deepSleep(120000); // Mise en veille 2 min
+    
 }
 
 void initSerial() {
@@ -105,7 +110,6 @@ void initSensors() {
 
 void initModem() {
     modem.begin(EU868);
-    delay(1000);
 }
 
 void displayWeight() {
@@ -173,13 +177,14 @@ int sendLoRaPacket() {
     short dhtHumidity = short(dht.readHumidity());
     short dht2Humidity = short(dht2.readHumidity());
     short dht3Humidity = short(dht3.readHumidity());
+    int luminosityValue = analogRead(photoresistorPin);
+    short shortLuminosityValue = (short)luminosityValue;
     float weight_units = scale.get_units(10);
     if (weight_units < 0) weight_units = 0.00;
     short ounces = (weight_units * 0.035274) / 10;
     Serial.println("poids envoyé : " + String(ounces) + " g");
     modem.beginPacket();
-    modem.write(dhtTemp);
-    modem.write(dhtHumidity);
+    modem.write(shortLuminosityValue);
     modem.write((short)ds18b20Temp1);
     modem.write((short)ds18b20Temp2);
     modem.write((short)ounces);
