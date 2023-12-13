@@ -42,7 +42,7 @@ void setup() {
     initModem();
 }
 
-// Définition des durées pour le Morse de la LED pour dire "BEE"
+// Définition des durées pour le Morse de la LED pour dire "BEE" -> −··· · · 
 const int dotDuration = 150;  // Durée d'un point
 const int dashDuration = dotDuration * 3;  // Durée d'un trait (trois fois un point)
 const int elementSpace = dotDuration;  // Espace entre éléments d'une lettre
