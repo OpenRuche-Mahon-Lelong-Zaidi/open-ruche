@@ -13,17 +13,14 @@ String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 int DHT2_PIN = 5;
 int DHT3_PIN = 2;
 int DHT3_TYPE = DHT22;
-int ONE_WIRE_BUS_1 = 10;
-int ONE_WIRE_BUS_2 = 9;
 int DOUT_PIN = 13;
 int CLK_PIN = 14;
 int photoresistorPin = A1;
 int BUZZER_PIN = 3;
+int ONE_WIRE_BUS = 9; // Pin commun pour les deux DS18B20
 
-OneWire oneWire1(ONE_WIRE_BUS_1);
-OneWire oneWire2(ONE_WIRE_BUS_2);
-DallasTemperature sensors1(&oneWire1);
-DallasTemperature sensors2(&oneWire2);
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
 DHT dht2(DHT2_PIN, DHT3_TYPE); // DHT 22
 DHT dht3(DHT3_PIN, DHT3_TYPE); // DHT 22
 HX711 scale;
@@ -113,8 +110,7 @@ void initLoraConnection(){
 }
 
 void initSensors() {
-    sensors1.begin();
-    sensors2.begin();
+    sensors.begin();
     scale.begin(DOUT_PIN, CLK_PIN);
     scale.set_scale();
     scale.tare();
@@ -137,10 +133,9 @@ void displayWeight() {
 }
 
 void displayTemperatures() {
-    sensors1.requestTemperatures();
-    sensors2.requestTemperatures();
-    float ds18b20Temp1 = sensors1.getTempCByIndex(0);
-    float ds18b20Temp2 = sensors2.getTempCByIndex(0);
+    sensors.requestTemperatures();
+    float ds18b20Temp1 = sensors.getTempCByIndex(0);
+    float ds18b20Temp2 = sensors.getTempCByIndex(1);
     short dht2Temp = short(dht2.readTemperature());
     short dht3Temp = short(dht3.readTemperature());
     short dht2Humidity = short(dht2.readHumidity());
@@ -168,8 +163,9 @@ void handleLoRaConnection() {
 }
 
 int sendLoRaPacket() {
-    float ds18b20Temp1 = sensors1.getTempCByIndex(0);
-    float ds18b20Temp2 = sensors2.getTempCByIndex(0);
+    sensors.requestTemperatures();
+    float ds18b20Temp1 = sensors.getTempCByIndex(0);
+    float ds18b20Temp2 = sensors.getTempCByIndex(1);
     short dht2Temp = short(dht2.readTemperature());
     short dht3Temp = short(dht3.readTemperature());
     short dht2Humidity = short(dht2.readHumidity());
