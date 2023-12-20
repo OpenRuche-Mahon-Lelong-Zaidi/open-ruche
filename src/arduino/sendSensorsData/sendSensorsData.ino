@@ -11,7 +11,7 @@ String appEui = "1322144234234235";
 String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 
 int DHT_PIN = 4;
-int DHT2_PIN = 3;
+int DHT2_PIN = 5;
 int DHT3_PIN = 2;
 int DHT_TYPE = DHT11;
 int DHT3_TYPE = DHT22;
@@ -20,7 +20,7 @@ int ONE_WIRE_BUS_2 = 9;
 int DOUT_PIN = 13;
 int CLK_PIN = 14;
 int photoresistorPin = A1;
-
+int BUZZER_PIN = 3;
 
 OneWire oneWire1(ONE_WIRE_BUS_1);
 OneWire oneWire2(ONE_WIRE_BUS_2);
@@ -36,7 +36,6 @@ bool connected = false;
 int err_count = 0;
 short con = 0;
 const float CALIBRATION_FACTOR = 1.045;
-int LED_PIN = 5;
 
 void setup() {
     initSerial();
@@ -53,15 +52,15 @@ const int letterSpace = dotDuration * 3;  // Espace entre lettres
 const int wordSpace = dotDuration * 7;  // Espace entre mots
 
 void toggleLed(int duration) {
-    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, HIGH);
     delay(duration);
-    digitalWrite(LED_PIN, LOW);
+    digitalWrite(BUZZER_PIN, LOW);
 }
 
 void initLed() {
     // Allumage de la LED en Morse pour dire "BEE"
     Serial.println("INITIALISATION... BEE");
-    pinMode(LED_PIN, OUTPUT);
+    pinMode(BUZZER_PIN, OUTPUT);
 
     // Lettre B: "-..."
     toggleLed(dashDuration);
