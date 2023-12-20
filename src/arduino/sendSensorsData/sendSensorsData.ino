@@ -10,10 +10,8 @@ LoRaModem modem;
 String appEui = "1322144234234235";
 String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 
-int DHT_PIN = 4;
 int DHT2_PIN = 5;
 int DHT3_PIN = 2;
-int DHT_TYPE = DHT11;
 int DHT3_TYPE = DHT22;
 int ONE_WIRE_BUS_1 = 10;
 int ONE_WIRE_BUS_2 = 9;
@@ -26,7 +24,6 @@ OneWire oneWire1(ONE_WIRE_BUS_1);
 OneWire oneWire2(ONE_WIRE_BUS_2);
 DallasTemperature sensors1(&oneWire1);
 DallasTemperature sensors2(&oneWire2);
-DHT dht(DHT_PIN, DHT_TYPE);
 DHT dht2(DHT2_PIN, DHT3_TYPE); // DHT 22
 DHT dht3(DHT3_PIN, DHT3_TYPE); // DHT 22
 HX711 scale;
@@ -38,10 +35,11 @@ short con = 0;
 const float CALIBRATION_FACTOR = 1.045;
 
 void setup() {
+    initSound();
     initSerial();
-    initSensors();
-    initLed();
     initModem();
+    initSensors();
+    initLoraConnection();
 }
 
 // Définition des durées pour le Morse de la LED pour dire "BEE" -> −··· · · 
@@ -51,33 +49,33 @@ const int elementSpace = dotDuration;  // Espace entre éléments d'une lettre
 const int letterSpace = dotDuration * 3;  // Espace entre lettres
 const int wordSpace = dotDuration * 7;  // Espace entre mots
 
-void toggleLed(int duration) {
+void toggleBuzzer(int duration) {
     digitalWrite(BUZZER_PIN, HIGH);
     delay(duration);
     digitalWrite(BUZZER_PIN, LOW);
 }
 
-void initLed() {
-    // Allumage de la LED en Morse pour dire "BEE"
+void initSound() {
+    // Son buzzer en Morse pour dire "BEE"
     Serial.println("INITIALISATION... BEE");
     pinMode(BUZZER_PIN, OUTPUT);
 
     // Lettre B: "-..."
-    toggleLed(dashDuration);
+    toggleBuzzer(dashDuration);
     delay(elementSpace);
-    toggleLed(dotDuration);
+    toggleBuzzer(dotDuration);
     delay(elementSpace);
-    toggleLed(dotDuration);
+    toggleBuzzer(dotDuration);
     delay(elementSpace);
-    toggleLed(dotDuration);
+    toggleBuzzer(dotDuration);
     delay(letterSpace);
 
     // Lettre E: "."
-    toggleLed(dotDuration);
+    toggleBuzzer(dotDuration);
     delay(letterSpace);
 
     // Lettre E: "."
-    toggleLed(dotDuration);
+    toggleBuzzer(dotDuration);
 }
 
 
@@ -95,6 +93,25 @@ void initSerial() {
     Serial.println("Carte MKRWAN n°11 connectée !\nTentative de connexion à l'application TTN...");
 }
 
+void initLoraConnection(){
+  while(!connected){
+      Serial.print("Join test : ");
+      Serial.println(++con);
+      int ret = modem.joinOTAA(appEui, appKey);
+      if (ret) {
+          connected = true;
+          modem.minPollInterval(60);
+          Serial.println("Connected");
+          modem.dataRate(5);
+          delay(2000);
+          err_count = 0;
+      }
+  }
+    if (connected) {
+        toggleBuzzer(1500);
+    }
+}
+
 void initSensors() {
     sensors1.begin();
     sensors2.begin();
@@ -102,7 +119,6 @@ void initSensors() {
     scale.set_scale();
     scale.tare();
     scale.set_scale(CALIBRATION_FACTOR);
-    dht.begin();
     dht2.begin();
     dht3.begin();
 }
@@ -125,16 +141,12 @@ void displayTemperatures() {
     sensors2.requestTemperatures();
     float ds18b20Temp1 = sensors1.getTempCByIndex(0);
     float ds18b20Temp2 = sensors2.getTempCByIndex(0);
-    short dhtTemp = short(dht.readTemperature());
     short dht2Temp = short(dht2.readTemperature());
     short dht3Temp = short(dht3.readTemperature());
-    short dhtHumidity = short(dht.readHumidity());
     short dht2Humidity = short(dht2.readHumidity());
     short dht3Humidity = short(dht3.readHumidity());
-    Serial.println("[INFO] Temperature DHT11 1 = " + String(dhtTemp) + " °C");
     Serial.println("[INFO] Temperature DHT11 2 = " + String(dht2Temp) + " °C");
     Serial.println("[INFO] Temperature DHT11 3 = " + String(dht3Temp) + " °C");
-    Serial.println("[INFO] Humidite DHT11 1 = " + String(dhtHumidity) + " %");
     Serial.println("[INFO] Humidite DHT11 2 = " + String(dht2Humidity) + " %");
     Serial.println("[INFO] Humidite DHT11 3 = " + String(dht3Humidity) + " %");
     Serial.println("[INFO] Temperature DS18B20 (1) = " + String(short(ds18b20Temp1)) + " °C");
@@ -142,20 +154,8 @@ void displayTemperatures() {
 }
 
 void handleLoRaConnection() {
-    if (!connected) {
-        Serial.print("Join test : ");
-        Serial.println(++con);
-        int ret = modem.joinOTAA(appEui, appKey);
-        if (ret) {
-            connected = true;
-            modem.minPollInterval(60);
-            Serial.println("Connected");
-            modem.dataRate(5);
-            delay(2000);
-            err_count = 0;
-        }
-    }
     if (connected) {
+        toggleBuzzer(1);
         int err = sendLoRaPacket();
         if (err <= 0) {
             handleLoRaError(err);
@@ -170,10 +170,8 @@ void handleLoRaConnection() {
 int sendLoRaPacket() {
     float ds18b20Temp1 = sensors1.getTempCByIndex(0);
     float ds18b20Temp2 = sensors2.getTempCByIndex(0);
-    short dhtTemp = short(dht.readTemperature());
     short dht2Temp = short(dht2.readTemperature());
     short dht3Temp = short(dht3.readTemperature());
-    short dhtHumidity = short(dht.readHumidity());
     short dht2Humidity = short(dht2.readHumidity());
     short dht3Humidity = short(dht3.readHumidity());
     int luminosityValue = analogRead(photoresistorPin);
