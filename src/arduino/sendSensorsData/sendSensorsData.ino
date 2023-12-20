@@ -5,12 +5,12 @@
 #include <HX711.h>
 #include <ArduinoLowPower.h>
 
+// Initialize LoRa modem with application unique identifiers
 LoRaModem modem;
-
 String appEui = "1322144234234235";
 String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 
-// MKRWAN 1310 connections
+// Define connection pins for various sensors
 int DHT2_PIN = 5;
 int DHT3_PIN = 2;
 int DHT3_TYPE = DHT22;
@@ -18,33 +18,34 @@ int DOUT_PIN = 13;
 int CLK_PIN = 14;
 int photoresistorPin = A1;
 int BUZZER_PIN = 3;
-int ONE_WIRE_BUS = 9; // Pin commun pour les deux DS18B20
+int ONE_WIRE_BUS = 9; // Shared pin for DS18B20 sensors
 int batteryVoltagePin = A3;
 
+// Initialize sensors
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
-DHT dht2(DHT2_PIN, DHT3_TYPE); // DHT 22
-DHT dht3(DHT3_PIN, DHT3_TYPE); // DHT 22
+DHT dht2(DHT2_PIN, DHT3_TYPE);
+DHT dht3(DHT3_PIN, DHT3_TYPE);
 HX711 scale;
 
-// global variables
+// Global variables for connectivity and calibration
 bool connected = false;
 int err_count = 0;
 short con = 0;
 const float CALIBRATION_FACTOR = 1.045;
 
-// Définition des durées pour le Morse de la LED pour dire "BEE" -> −··· · · 
-const int dotDuration = 150;  // Durée d'un point
-const int dashDuration = dotDuration * 3;  // Durée d'un trait (trois fois un point)
-const int elementSpace = dotDuration;  // Espace entre éléments d'une lettre
-const int letterSpace = dotDuration * 3;  // Espace entre lettres
-const int wordSpace = dotDuration * 7;  // Espace entre mots
+// Morse code durations for LED signaling
+const int dotDuration = 150; // Dot duration
+const int dashDuration = dotDuration * 3; // Dash duration (three times a dot)
+const int elementSpace = dotDuration; // Space between elements of a letter
+const int letterSpace = dotDuration * 3; // Space between letters
+const int wordSpace = dotDuration * 7; // Space between words
 
-float readBatteryPercentage(){
+// Function to calculate battery percentage
+float readBatteryPercentage() {
     int sensorValue = analogRead(batteryVoltagePin);
-    float batteryVoltage = (sensorValue / 1023.0) * 3.3 * ((100000.0 + 100000.0) / 100000.0); // Pont diviseur de tension R1 -> 100KOhms et R2 -> 100KOhms.
+    float batteryVoltage = (sensorValue / 1023.0) * 3.3 * ((100000.0 + 100000.0) / 100000.0);
     float batteryPercentage = (batteryVoltage - 3.7) / (4.2 - 3.7) * 100;
-    Serial.println("BATTERY VOLTAGE " + String(batteryVoltage) + " V");
     batteryPercentage = constrain(batteryPercentage, 0, 100);
     return batteryPercentage;
 }
@@ -57,65 +58,57 @@ void setup() {
     initLoraConnection();
 }
 
+// Toggle buzzer function
 void toggleBuzzer(int duration) {
     digitalWrite(BUZZER_PIN, HIGH);
     delay(duration);
     digitalWrite(BUZZER_PIN, LOW);
 }
 
-void initSound() {
-    // Son buzzer en Morse pour dire "BEE"
-    Serial.println("INITIALISATION... BEE");
-    pinMode(BUZZER_PIN, OUTPUT);
-
-    // Lettre B: "-..."
-    toggleBuzzer(dashDuration);
-    delay(elementSpace);
-    toggleBuzzer(dotDuration);
-    delay(elementSpace);
-    toggleBuzzer(dotDuration);
-    delay(elementSpace);
-    toggleBuzzer(dotDuration);
-    delay(letterSpace);
-
-    // Lettre E: "."
-    toggleBuzzer(dotDuration);
-    delay(letterSpace);
-
-    // Lettre E: "."
-    toggleBuzzer(dotDuration);
+void initModem() {
+    modem.begin(EU868);
 }
 
+// Initialize sound function with Morse code for "BEE"
+void initSound() {
+    Serial.println("INITIALISATION... BEE");
+    pinMode(BUZZER_PIN, OUTPUT);
+    toggleBuzzer(dashDuration); delay(elementSpace); // Morse code for B
+    toggleBuzzer(dotDuration); delay(elementSpace);
+    toggleBuzzer(dotDuration); delay(elementSpace);
+    toggleBuzzer(dotDuration); delay(letterSpace);
+    toggleBuzzer(dotDuration); delay(letterSpace); // Morse code for E
+    toggleBuzzer(dotDuration); // Morse code for E
+}
 
 void loop() {
     displayWeight();
     displayTemperatures();
     displayBatteryPercentage();
     handleLoRaConnection();
-    //LowPower.deepSleep(120000); // Mise en veille 2 min
-    
+    // Uncomment to enable deep sleep mode
+    //LowPower.deepSleep(120000);
 }
 
 void initSerial() {
     Serial.begin(115200);
-    //while (!Serial);
     Serial.println("Carte MKRWAN n°11 connectée !\nTentative de connexion à l'application TTN...");
 }
 
-void initLoraConnection(){
-  while(!connected){
-      Serial.print("Join test : ");
-      Serial.println(++con);
-      int ret = modem.joinOTAA(appEui, appKey);
-      if (ret) {
-          connected = true;
-          modem.minPollInterval(60);
-          Serial.println("Connected");
-          modem.dataRate(5);
-          delay(2000);
-          err_count = 0;
-      }
-  }
+void initLoraConnection() {
+    while (!connected) {
+        Serial.print("Join test : ");
+        Serial.println(++con);
+        int ret = modem.joinOTAA(appEui, appKey);
+        if (ret) {
+            connected = true;
+            modem.minPollInterval(60);
+            Serial.println("Connected");
+            modem.dataRate(5);
+            delay(2000);
+            err_count = 0;
+        }
+    }
     if (connected) {
         toggleBuzzer(1500);
     }
@@ -131,27 +124,26 @@ void initSensors() {
     dht3.begin();
 }
 
-void initModem() {
-    modem.begin(EU868);
-}
-
 void displayWeight() {
-    Serial.print("[INFO] ");
     float weight_units = scale.get_units(10);
     if (weight_units < 0) weight_units = 0.00;
     float ounces = weight_units * 0.035274;
-    long weight_grams = (long)(ounces * 100); // Multiplier par 100 pour une précision au dixième de gramme
+    long weight_grams = (long)(ounces * 100);
+    // Displaying the weight measured by the HX711 load cell
     Serial.println("Poids mesuré = " + String(weight_grams / 100.0) + " grammes");
 }
 
 void displayTemperatures() {
+    // Requesting temperature readings from both DS18B20 sensors
     sensors.requestTemperatures();
     float ds18b20Temp1 = sensors.getTempCByIndex(0);
     float ds18b20Temp2 = sensors.getTempCByIndex(1);
+    // Reading temperatures and humidity from DHT sensors
     short dht2Temp = short(dht2.readTemperature());
     short dht3Temp = short(dht3.readTemperature());
     short dht2Humidity = short(dht2.readHumidity());
     short dht3Humidity = short(dht3.readHumidity());
+    // Displaying the temperature and humidity readings
     Serial.println("[INFO] Temperature DHT11 2 = " + String(dht2Temp) + " °C");
     Serial.println("[INFO] Temperature DHT11 3 = " + String(dht3Temp) + " °C");
     Serial.println("[INFO] Humidite DHT11 2 = " + String(dht2Humidity) + " %");
@@ -161,13 +153,15 @@ void displayTemperatures() {
 }
 
 void displayBatteryPercentage() {
+    // Calculating and displaying the battery percentage
     float batteryPercentage = readBatteryPercentage();
     Serial.println("[INFO] Pourcentage de batterie = " + String(batteryPercentage) + " %");
 }
 
 void handleLoRaConnection() {
+    // Handling the LoRa connection and sending data packets
     if (connected) {
-        toggleBuzzer(1);
+        toggleBuzzer(1); // Buzzer signal for successful connection
         int err = sendLoRaPacket();
         if (err <= 0) {
             handleLoRaError(err);
@@ -180,6 +174,7 @@ void handleLoRaConnection() {
 }
 
 int sendLoRaPacket() {
+    // Preparing and sending a data packet via LoRa
     sensors.requestTemperatures();
     float batteryPercentage = readBatteryPercentage();
     short batteryPercentageShort = static_cast<short>(batteryPercentage);
@@ -194,7 +189,7 @@ int sendLoRaPacket() {
     float weight_units = scale.get_units(10);
     if (weight_units < 0) weight_units = 0.00;
     short ounces = (weight_units * 0.035274) / 10;
-    Serial.println("poids envoyé : " + String(ounces) + " g");
+    // Sending all sensor data in a single LoRa packet
     modem.beginPacket();
     modem.write(shortLuminosityValue);
     modem.write((short)ds18b20Temp1);
@@ -209,6 +204,7 @@ int sendLoRaPacket() {
 }
 
 void handleLoRaError(int err) {
+    // Handling errors in LoRa communication
     Serial.print("Error : ");
     Serial.println(err);
     err_count++;
