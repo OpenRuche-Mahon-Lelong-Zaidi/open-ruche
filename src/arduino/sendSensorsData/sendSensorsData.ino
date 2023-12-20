@@ -178,10 +178,10 @@ int sendLoRaPacket() {
     sensors.requestTemperatures();
     float batteryPercentage = readBatteryPercentage();
     short batteryPercentageShort = static_cast<short>(batteryPercentage);
-    short tempDS18B20_1 = (short)(sensors1.getTempCByIndex(0) * 100);
-    short tempDS18B20_2 = (short)(sensors2.getTempCByIndex(0) * 100);
-    short tempDHT11_2 = (short)(dht2.readTemperature() * 100);
-    short tempDHT11_3 = (short)(dht3.readTemperature() * 100);
+    short tempDS18B20_1 = (short)(sensors.getTempCByIndex(0) * 100);
+    short tempDS18B20_2 = (short)(sensors.getTempCByIndex(1) * 100);
+    short tempDHT22_2 = (short)(dht2.readTemperature() * 100);
+    short tempDHT22_3 = (short)(dht3.readTemperature() * 100);
     short dht2Humidity = short(dht2.readHumidity() * 100);
     short dht3Humidity = short(dht3.readHumidity() * 100);
     int luminosityValue = analogRead(photoresistorPin);
@@ -192,13 +192,13 @@ int sendLoRaPacket() {
     // Sending all sensor data in a single LoRa packet
     modem.beginPacket();
     modem.write(shortLuminosityValue);
-    modem.write((short)ds18b20Temp1);
-    modem.write((short)ds18b20Temp2);
+    modem.write((short)tempDS18B20_1);
+    modem.write((short)tempDS18B20_2);
     modem.write((short)ounces);
     modem.write(dht2Humidity);
     modem.write(dht3Humidity);
-    modem.write(dht2Temp);
-    modem.write(dht3Temp);
+    modem.write(tempDHT22_2);
+    modem.write(tempDHT22_3);
     modem.write(batteryPercentageShort);
     return modem.endPacket();
 }
