@@ -144,10 +144,10 @@ void displayTemperatures() {
     short dht2Humidity = short(dht2.readHumidity());
     short dht3Humidity = short(dht3.readHumidity());
     // Displaying the temperature and humidity readings
-    Serial.println("[INFO] Temperature DHT11 2 = " + String(dht2Temp) + " °C");
-    Serial.println("[INFO] Temperature DHT11 3 = " + String(dht3Temp) + " °C");
-    Serial.println("[INFO] Humidite DHT11 2 = " + String(dht2Humidity) + " %");
-    Serial.println("[INFO] Humidite DHT11 3 = " + String(dht3Humidity) + " %");
+    Serial.println("[INFO] Temperature DHT22 2 = " + String(dht2Temp) + " °C");
+    Serial.println("[INFO] Temperature DHT22 3 = " + String(dht3Temp) + " °C");
+    Serial.println("[INFO] Humidite DHT22 2 = " + String(dht2Humidity) + " %");
+    Serial.println("[INFO] Humidite DHT22 3 = " + String(dht3Humidity) + " %");
     Serial.println("[INFO] Temperature DS18B20 (1) = " + String(short(ds18b20Temp1)) + " °C");
     Serial.println("[INFO] Temperature DS18B20 (2) = " + String(short(ds18b20Temp2)) + " °C");
 }
