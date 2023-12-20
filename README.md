@@ -20,7 +20,7 @@
 - Features a Morse code buzzer system for initial diagnostics and connection status indication.
 
 ## Acknowledgements
-Collaborative effort by @wolfyc, @A-LELONG, @gregoiremahon, and Chahine BL.
+This is a collaborative effort by [@wolfyc](https://github.com/wolfyc), [@A-LELONG](https://github.com/A-LELONG), [@gregoiremahon](https://github.com/gregoiremahon), and Chahine BL.
 
 ## Contact
 For more information or inquiries, please contact us.
