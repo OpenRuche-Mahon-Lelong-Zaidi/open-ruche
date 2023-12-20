@@ -10,6 +10,7 @@ LoRaModem modem;
 String appEui = "1322144234234235";
 String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 
+// MKRWAN 1310 connections
 int DHT2_PIN = 5;
 int DHT3_PIN = 2;
 int DHT3_TYPE = DHT22;
@@ -18,6 +19,7 @@ int CLK_PIN = 14;
 int photoresistorPin = A1;
 int BUZZER_PIN = 3;
 int ONE_WIRE_BUS = 9; // Pin commun pour les deux DS18B20
+int batteryVoltagePin = A3;
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -25,11 +27,27 @@ DHT dht2(DHT2_PIN, DHT3_TYPE); // DHT 22
 DHT dht3(DHT3_PIN, DHT3_TYPE); // DHT 22
 HX711 scale;
 
-
+// global variables
 bool connected = false;
 int err_count = 0;
 short con = 0;
 const float CALIBRATION_FACTOR = 1.045;
+
+// Définition des durées pour le Morse de la LED pour dire "BEE" -> −··· · · 
+const int dotDuration = 150;  // Durée d'un point
+const int dashDuration = dotDuration * 3;  // Durée d'un trait (trois fois un point)
+const int elementSpace = dotDuration;  // Espace entre éléments d'une lettre
+const int letterSpace = dotDuration * 3;  // Espace entre lettres
+const int wordSpace = dotDuration * 7;  // Espace entre mots
+
+float readBatteryPercentage(){
+    int sensorValue = analogRead(batteryVoltagePin);
+    float batteryVoltage = (sensorValue / 1023.0) * 3.3 * ((100000.0 + 100000.0) / 100000.0); // Pont diviseur de tension R1 -> 100KOhms et R2 -> 100KOhms.
+    float batteryPercentage = (batteryVoltage - 3.7) / (4.2 - 3.7) * 100;
+    Serial.println("BATTERY VOLTAGE " + String(batteryVoltage) + " V");
+    batteryPercentage = constrain(batteryPercentage, 0, 100);
+    return batteryPercentage;
+}
 
 void setup() {
     initSound();
@@ -38,13 +56,6 @@ void setup() {
     initSensors();
     initLoraConnection();
 }
-
-// Définition des durées pour le Morse de la LED pour dire "BEE" -> −··· · · 
-const int dotDuration = 150;  // Durée d'un point
-const int dashDuration = dotDuration * 3;  // Durée d'un trait (trois fois un point)
-const int elementSpace = dotDuration;  // Espace entre éléments d'une lettre
-const int letterSpace = dotDuration * 3;  // Espace entre lettres
-const int wordSpace = dotDuration * 7;  // Espace entre mots
 
 void toggleBuzzer(int duration) {
     digitalWrite(BUZZER_PIN, HIGH);
@@ -79,6 +90,7 @@ void initSound() {
 void loop() {
     displayWeight();
     displayTemperatures();
+    displayBatteryPercentage();
     handleLoRaConnection();
     //LowPower.deepSleep(120000); // Mise en veille 2 min
     
@@ -148,6 +160,11 @@ void displayTemperatures() {
     Serial.println("[INFO] Temperature DS18B20 (2) = " + String(short(ds18b20Temp2)) + " °C");
 }
 
+void displayBatteryPercentage() {
+    float batteryPercentage = readBatteryPercentage();
+    Serial.println("[INFO] Pourcentage de batterie = " + String(batteryPercentage) + " %");
+}
+
 void handleLoRaConnection() {
     if (connected) {
         toggleBuzzer(1);
@@ -164,6 +181,8 @@ void handleLoRaConnection() {
 
 int sendLoRaPacket() {
     sensors.requestTemperatures();
+    float batteryPercentage = readBatteryPercentage();
+    short batteryPercentageShort = static_cast<short>(batteryPercentage);
     float ds18b20Temp1 = sensors.getTempCByIndex(0);
     float ds18b20Temp2 = sensors.getTempCByIndex(1);
     short dht2Temp = short(dht2.readTemperature());
@@ -185,6 +204,7 @@ int sendLoRaPacket() {
     modem.write(dht3Humidity);
     modem.write(dht2Temp);
     modem.write(dht3Temp);
+    modem.write(batteryPercentageShort);
     return modem.endPacket();
 }
 
