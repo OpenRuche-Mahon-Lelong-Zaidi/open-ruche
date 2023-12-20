@@ -178,12 +178,12 @@ int sendLoRaPacket() {
     sensors.requestTemperatures();
     float batteryPercentage = readBatteryPercentage();
     short batteryPercentageShort = static_cast<short>(batteryPercentage);
-    float ds18b20Temp1 = sensors.getTempCByIndex(0);
-    float ds18b20Temp2 = sensors.getTempCByIndex(1);
-    short dht2Temp = short(dht2.readTemperature());
-    short dht3Temp = short(dht3.readTemperature());
-    short dht2Humidity = short(dht2.readHumidity());
-    short dht3Humidity = short(dht3.readHumidity());
+    short tempDS18B20_1 = (short)(sensors1.getTempCByIndex(0) * 100);
+    short tempDS18B20_2 = (short)(sensors2.getTempCByIndex(0) * 100);
+    short tempDHT11_2 = (short)(dht2.readTemperature() * 100);
+    short tempDHT11_3 = (short)(dht3.readTemperature() * 100);
+    short dht2Humidity = short(dht2.readHumidity() * 100);
+    short dht3Humidity = short(dht3.readHumidity() * 100);
     int luminosityValue = analogRead(photoresistorPin);
     short shortLuminosityValue = (short)luminosityValue;
     float weight_units = scale.get_units(10);
