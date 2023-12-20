@@ -1,32 +1,26 @@
 # open-ruche
 
 ## Overview
-"Open Ruche" is an academic university project focused on developing an IoT system for beehive monitoring. This innovative project aims to provide real-time data on beehive conditions such as temperature, humidity, and weight to support beekeepers and environmental researchers.
+"Open Ruche" is an academic university project at Polytech Sorbonne, focusing on developing an IoT system for real-time beehive monitoring. It aims to support beekeepers and environmental researchers with vital data on beehive conditions.
 
 ## Features
-- Real-time monitoring of beehive conditions.
-- Data transmission to a cloud server for analysis.
+- Real-time monitoring of temperature, humidity, and weight inside the beehive.
+- Efficient data transmission to a cloud server for analysis and storage.
 - User-friendly interface for data visualization and alerts.
 
-## Technology
-- Arduino-based sensors for temperature, humidity, and weight.
-- LoRa communication for efficient data transmission.
-- Solar-powered system for sustainable operation.
+## Technical Details
+- Utilizes Arduino-based sensors including DallasTemperature sensors for accurate temperature readings, DHT22 sensors for humidity, and HX711 for weight measurement.
+- Incorporates a LoRa communication module (MKRWAN) for long-range, low-power data transmission.
+- Includes a photoresistor for ambient light measurement, enhancing data context.
+- Employs a solar-powered system, ensuring sustainable and continuous operation.
 
-## Installation
-Instructions on setting up the "Open Ruche" system can be found in the 'Installation' section.
-
-## Usage
-For information on how to use the system, please refer to the 'Usage' documentation.
-
-## Contributing
-We welcome contributions from the community. Please read our 'Contributing' guidelines for more information.
-
-## License
-This project is released under the [LICENSE NAME] license. See the 'LICENSE' file for more details.
+## Code Overview
+- `sendSensorsData.ino` script handles sensor data collection and LoRa communication.
+- Implements a power-efficient design with deep sleep capabilities and efficient LoRa data transmission.
+- Features a Morse code buzzer system for initial diagnostics and connection status indication.
 
 ## Acknowledgements
-This project is a collaborative effort by students @wolfyc , @A-LELONG, @gregoiremahon and Chahine BL at Polytech Sorbonne.
+Collaborative effort by @wolfyc, @A-LELONG, @gregoiremahon, and Chahine BL.
 
 ## Contact
 For more information or inquiries, please contact us.
