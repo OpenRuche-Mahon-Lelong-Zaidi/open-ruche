@@ -32,7 +32,7 @@ HX711 scale;
 bool connected = false;
 int err_count = 0;
 short con = 0;
-const float CALIBRATION_FACTOR = 1.045;
+const float CALIBRATION_FACTOR = 1.095; // 1.045
 
 // Morse code durations for LED signaling
 const int dotDuration = 150; // Dot duration
@@ -118,7 +118,7 @@ void initSensors() {
     sensors.begin();
     scale.begin(DOUT_PIN, CLK_PIN);
     scale.set_scale();
-    scale.tare();
+    //scale.tare();
     scale.set_scale(CALIBRATION_FACTOR);
     dht2.begin();
     dht3.begin();
