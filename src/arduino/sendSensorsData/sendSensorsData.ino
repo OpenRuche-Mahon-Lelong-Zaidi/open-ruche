@@ -11,15 +11,15 @@ String appEui = "1322144234234235";
 String appKey = "A01DC8F9E363C86A883E41A6817427A5";
 
 // Define connection pins for various sensors
-int DHT2_PIN = 5;
+int DHT2_PIN = 3;
 int DHT3_PIN = 2;
 int DHT3_TYPE = DHT22;
 int DOUT_PIN = 13;
 int CLK_PIN = 14;
 int photoresistorPin = A1;
-int BUZZER_PIN = 3;
+int BUZZER_PIN = 5;
 int ONE_WIRE_BUS = 9; // Shared pin for DS18B20 sensors
-int batteryVoltagePin = A3;
+int batteryVoltagePin = A6;
 
 // Initialize sensors
 OneWire oneWire(ONE_WIRE_BUS);
