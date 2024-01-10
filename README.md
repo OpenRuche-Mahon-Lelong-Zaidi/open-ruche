@@ -19,6 +19,22 @@
 - Implements a power-efficient design with deep sleep capabilities and efficient LoRa data transmission.
 - Features a Morse code buzzer system for initial diagnostics and connection status indication.
 
+## Library Requirements for Open Ruche Project
+
+### Sensor Libraries
+- **DHT sensor library** - v1.4.0: For DHT22 temperature and humidity sensor
+- **OneWire** - v2.3.5: For digital communication with temperature sensors
+- **Dallas Temperature Control Library** - v3.9.0: For interfacing with Dallas temperature sensors
+- **HX711 Arduino Library** - v0.7.4: For HX711 load cell interface
+
+### Communication Libraries
+- **MKRWAN** - v1.0.18: For LoRaWAN communication
+
+### Power Management Libraries
+- **ArduinoLowPower** - v1.2.2: For managing low power modes in Arduino
+
+**Note:** These libraries can be installed via the Arduino Library Manager or downloaded directly from their respective GitHub repositories. Ensure to use the specified versions or later for compatibility.
+
 ## Acknowledgements
 This is a collaborative effort by [@wolfyc](https://github.com/wolfyc), [@A-LELONG](https://github.com/A-LELONG), [@gregoiremahon](https://github.com/gregoiremahon), and Chahine BL.
 
