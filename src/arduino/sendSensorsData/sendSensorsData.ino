@@ -13,13 +13,16 @@
 
 // LoRa modem initialization with application unique identifiers
 LoRaModem modem;
-const String appEui = "1322144234234235";
-const String appKey = "A01DC8F9E363C86A883E41A6817427A5";
+const String appEui = "1111111111111111";//"1322144234234235"; pour la carte 011
+const String appKey = "7C14025B31B01EB09C82846EE593E129"; //"A01DC8F9E363C86A883E41A6817427A5"; pour la carte 011
 
 // Pin assignments for sensors and actuators
 const int DHT2_PIN = 3, DHT3_PIN = 2, DHT3_TYPE = DHT22;
 const int DOUT_PIN = 13, CLK_PIN = 14, photoresistorPin = A1, BUZZER_PIN = 5;
 const int ONE_WIRE_BUS = 9, batteryVoltagePin = A6; // Pin for DS18B20 sensors
+const int photoResistorVCCpin = A2;
+#define DONE_PIN 6
+#define REARM_PIN 7
 
 // Sensor instances
 OneWire oneWire(ONE_WIRE_BUS);
@@ -37,16 +40,28 @@ const float CALIBRATION_FACTOR = 1.095; // Calibration factor for scale
 const int dotDuration = 150, dashDuration = dotDuration * 3;
 const int elementSpace = dotDuration, letterSpace = dotDuration * 3, wordSpace = dotDuration * 7;
 
-// Function to calculate battery percentage
-float readBatteryPercentage() {
+// Function to calculate battery voltage
+float readBatteryVoltage() {
     int sensorValue = analogRead(batteryVoltagePin);
+    float batteryVoltage = ((sensorValue / 1023.0) * 3.3 * 2) * 100; // Sending a short so multiply by 100 and divide at reception.
     // Convert analog value to battery percentage
-    float batteryVoltage = (sensorValue / 1023.0) * 3.3 * ((100000.0 + 100000.0) / 100000.0);
-    return constrain((batteryVoltage - 3.7) / (4.2 - 3.7) * 100, 0, 100);
+    //float batteryVoltage = (sensorValue / 1023.0) * 3.3 * ((100000.0 + 100000.0) / 100000.0);
+    //return constrain((batteryVoltage - 3.7) / (4.2 - 3.7) * 100, 0, 100);
+    return batteryVoltage;
+}
+
+short readLuminosityValue() {
+  digitalWrite(photoResistorVCCpin, HIGH);
+  int photoResistorValue = analogRead(photoresistorPin);
+  digitalWrite(photoResistorVCCpin, LOW);
+  return (short)photoResistorValue;
 }
 
 // System setup functions
 void setup() {
+    pinMode(DONE_PIN, OUTPUT);
+    pinMode(REARM_PIN, OUTPUT);
+    pinMode(photoResistorVCCpin, OUTPUT);
     initSound();
     initSerial();
     initModem();
@@ -76,13 +91,34 @@ void initSound() {
     toggleBuzzer(dotDuration); // E
 }
 
+void signalCompletionToTPL5110() {
+  // Tell TPL5110 that task is done
+  digitalWrite(DONE_PIN, HIGH);
+  delay(100); // Short delay to make sure that signal is received by TPL5110
+  digitalWrite(DONE_PIN, LOW);
+}
+
+void enterSleepMode() {
+  LowPower.sleep(660000); // SLEEP TIME 11 MINUTES -> 660000 ms
+  // Rearm TPL5110
+  digitalWrite(REARM_PIN, HIGH);
+  delay(100); // Short delay to make sure that signal is received by TPL5110
+  digitalWrite(REARM_PIN, LOW);
+}
+
 void loop() {
-    displayWeight();
-    displayTemperatures();
-    displayBatteryPercentage();
+    //displayWeight();
+    //displayTemperatures();
+    //displayBatteryPercentage();
+    delay(500);
     handleLoRaConnection();
+    delay(500);
+    signalCompletionToTPL5110();
+    enterSleepMode();
     // Uncomment for deep sleep mode: LowPower.deepSleep(120000);
 }
+
+
 
 void initSerial() {
     Serial.begin(115200);
@@ -132,16 +168,16 @@ void displayTemperatures() {
 }
 
 void displayBatteryPercentage() {
-    Serial.println("[INFO] Pourcentage de batterie = " + String(readBatteryPercentage()) + " %");
+    Serial.println("[INFO] Pourcentage de batterie = " + String(readBatteryVoltage()) + " %");
 }
 
 void handleLoRaConnection() {
     if (connected) {
-        toggleBuzzer(1);
+        //toggleBuzzer(1);
         if (sendLoRaPacket() <= 0) handleLoRaError();
         else {
             err_count = 0;
-            delay(20000);
+            //delay(20000);
             Serial.println("Message envoyé");
         }
     }
@@ -152,7 +188,7 @@ int sendLoRaPacket() {
     sensors.requestTemperatures();
     // Data aggregation for packet
     modem.beginPacket();
-    modem.write((short)analogRead(photoresistorPin));
+    modem.write((short)readLuminosityValue());
     modem.write((short)(sensors.getTempCByIndex(0) * 100));
     modem.write((short)(sensors.getTempCByIndex(1) * 100));
     modem.write((short)(scale.get_units(10) * 0.035274 / 10));
@@ -160,13 +196,13 @@ int sendLoRaPacket() {
     modem.write((short)(dht3.readHumidity() * 100));
     modem.write((short)(dht2.readTemperature() * 100));
     modem.write((short)(dht3.readTemperature() * 100));
-    modem.write((short)readBatteryPercentage());
+    modem.write((short)readBatteryVoltage());
     return modem.endPacket();
 }
 
 void handleLoRaError() {
-    Serial.print("Error : ");
-    Serial.println(err);
+    //Serial.print("Error : ");
+    //Serial.println(err);
     if (++err_count > 50) connected = false;
     delay(120000); // Error handling delay
 }
