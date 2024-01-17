@@ -1,7 +1,26 @@
 # Open Ruche Project Guide
 
 ## Project Overview
-The Open Ruche project is an academic endeavor conducted at Polytech Sorbonne, specifically within the EI2I program during the 4th year. Open Ruche focuses on developing an IoT system for real-time beehive monitoring. Its primary goal is to support beekeepers and environmental researchers by providing crucial data on beehive conditions.
+
+The Open Ruche project represents an ambitious academic undertaking conducted at Polytech Sorbonne, specifically within the EI2I program during the 4th year of study. This multidisciplinary initiative at the intersection of technology, environmental science, and sustainability is dedicated to the development of a sophisticated IoT (Internet of Things) system meticulously designed for real-time monitoring of beehives.
+
+### Mission and Significance
+
+At its core, Open Ruche is on a mission to address the critical need for comprehensive and real-time beehive monitoring solutions. The world's honeybee populations are facing a multitude of challenges, including climate change, habitat loss, pesticide exposure, and diseases. The consequences of declining bee populations are profound, as they serve as vital pollinators for a significant portion of global crops. Open Ruche's primary goal is to contribute significantly to the well-being of bee colonies and, by extension, to global food security.
+
+### IoT Innovation
+
+Open Ruche leverages cutting-edge IoT technology, combining hardware and software expertise to create a state-of-the-art monitoring system. The project's key innovation lies in its ability to provide real-time data on beehive conditions. This includes critical parameters such as temperature, humidity, hive weight, and light exposure. Such granular data is essential for beekeepers to make informed decisions about hive management, anticipate potential issues, and ensure the health and productivity of their bee colonies.
+
+### Bridging the Gap
+
+A core objective of Open Ruche is to bridge the gap between the beekeeping community and environmental researchers. By providing accessible and accurate hive data, the project enables collaboration between these two vital stakeholders. Beekeepers gain valuable insights into the conditions of their hives, allowing for more precise and timely interventions. Environmental researchers, on the other hand, can access a wealth of data to study the impact of environmental factors on bee health.
+
+### Sustainability Commitment
+
+Open Ruche is not just about technology; it's also a testament to sustainability and responsible environmental stewardship. The project embraces a sustainable approach by incorporating renewable energy sources, such as solar panels, to power the monitoring system. This ensures continuous and eco-friendly operation, aligning with the broader goal of promoting sustainable practices in agriculture and environmental monitoring.
+
+In summary, Open Ruche is more than a project; it's a commitment to safeguarding bee populations, fostering collaboration, and advancing the frontiers of IoT technology. It stands as a shining example of how academia, technology, and environmental consciousness can come together to address critical global challenges.
 
 ## Hardware Details
 
