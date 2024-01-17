@@ -150,17 +150,6 @@ By following these steps, you can calibrate the weight sensor in the Open Ruche 
 ### 2. Troubleshooting
 - Refer to the troubleshooting section in the project documentation for guidance on resolving any issues.
 
-## Project Rationale
-
-### Component Choices
-- Explain why each component was chosen for the project and how it contributes to beehive monitoring.
-
-### Technology Selection
-- Describe the decision to use LoRaWAN for long-range communication and how it benefits the project.
-
-### Data Interpretation
-- Provide insights into how to interpret the collected data for beekeeping and hive management.
-
 ## Programming
 
 The Open Ruche project is powered by an Arduino MKRWAN 1310 board, and its functionality is achieved through a combination of libraries and custom code. Below, we provide an overview of the code structure, libraries used, and how data is transmitted to the Things Network (TTN) and integrated with the Beep app API.
