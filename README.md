@@ -166,9 +166,6 @@ By following these steps, you can calibrate the weight sensor in the Open Ruche 
 - Monitor the data transmitted by your device via LoRaWAN on your chosen network provider's platform (for example, we used TTN Console for this project).
 - Verify temperature, humidity, weight, light, and battery voltage data.
 
-### 2. Troubleshooting
-- Refer to the troubleshooting section in the project documentation for guidance on resolving any issues.
-
 ## Programming
 
 The Open Ruche project is powered by an Arduino MKRWAN 1310 board, and its functionality is achieved through a combination of libraries and custom code. Below, we provide an overview of the code structure, libraries used, and how data is transmitted to the Things Network (TTN) and integrated with the Beep app API.
