@@ -67,7 +67,7 @@ The Open Ruche monitoring system relies on a carefully designed power supply sys
 - The LiPo battery is selected for its energy density and rechargeable nature, making it an excellent choice for remote IoT applications like beehive monitoring.
 - The battery's capacity is rated at 1050mAh, providing sufficient energy for extended operation.
 
-##### 2. LiPo Rider Pro Charging Circuit
+##### 2. LiPo Rider Pro BMS (Battery Management System)
 - To efficiently manage the LiPo battery's charging and ensure its longevity, the system incorporates the LiPo Rider Pro charging circuit.
 - The LiPo Rider Pro is responsible for safely recharging the LiPo battery. It regulates the voltage from the connected solar panel to charge the battery effectively.
 - This charging circuit includes safeguards to prevent overcharging and over-discharging, prolonging the LiPo battery's lifespan.
@@ -98,7 +98,7 @@ In this section, we provide an overview of the PCB schematic designed for the Op
 - **TPL5110 Integration:** To enhance power management and optimize energy consumption, the PCB integrates the TPL5110 module. This feature contributes to the project's low-power operation.
 
 #### PCB Schematic Image
-![Open Ruche PCB Schematic](pcb_schematic.png)
+![Open Ruche PCB Schematic](./doc/pcb_schematic.jpeg)
 
 The image above displays the actual PCB schematic, providing a visual representation of the board's layout, connectors, and sensor interfaces.
 
