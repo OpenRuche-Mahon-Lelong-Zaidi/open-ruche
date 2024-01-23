@@ -2,57 +2,41 @@
 
 ## Project Overview
 
-The Open Ruche project represents an ambitious academic undertaking conducted at Polytech Sorbonne, specifically within the EI2I program during the 4th year of study. This multidisciplinary initiative at the intersection of technology, environmental science, and sustainability is dedicated to the development of a sophisticated IoT (Internet of Things) system meticulously designed for real-time monitoring of beehives.
+The Open Ruche project, an initiative within the EI2I program at Polytech Sorbonne, is a testament to the seamless integration of technology with environmental monitoring. This endeavor is dedicated to crafting an advanced Internet of Things (IoT) system focused on real-time beehive monitoring. The project not only pioneers in the domain of apiculture by enabling precision in data collection and analysis but also sets a new standard in the utilization of collected data.
 
-### Mission and Significance
+Post-collection, the data undergoes a meticulous process of analysis and interpretation. This involves transforming raw sensor data into meaningful insights that provide a comprehensive understanding of beehive conditions. These insights are then made accessible to beekeepers and researchers through the Beep application programming interface (API), facilitating informed decision-making and proactive bee colony management.
 
-At its core, Open Ruche is on a mission to address the critical need for comprehensive and real-time beehive monitoring solutions. The world's honeybee populations are facing a multitude of challenges, including climate change, habitat loss, pesticide exposure, and diseases. The consequences of declining bee populations are profound, as they serve as vital pollinators for a significant portion of global crops. Open Ruche's primary goal is to contribute significantly to the well-being of bee colonies and, by extension, to global food security.
+In addition to its practical applications, Open Ruche is a stride toward innovation in the interplay of IoT and apiculture. It's not just about collecting data; it's about interpreting it to unlock new possibilities in beekeeping, from optimized hive conditions to preventive healthcare for bees. By combining state-of-the-art technology with a deep understanding of environmental science, Open Ruche is pioneering a new wave of smart apiculture that's in tune with the rhythms of nature and technology.
 
-### IoT Innovation
+### Mission and Objectives
 
-Open Ruche leverages cutting-edge IoT technology, combining hardware and software expertise to create a state-of-the-art monitoring system. The project's key innovation lies in its ability to provide real-time data on beehive conditions. This includes critical parameters such as temperature, humidity, hive weight, and light exposure. Such granular data is essential for beekeepers to make informed decisions about hive management, anticipate potential issues, and ensure the health and productivity of their bee colonies.
+The mission of Open Ruche is to offer a cutting-edge, reliable solution for real-time beehive monitoring, addressing the pressing needs of beekeepers and researchers. In an era marked by environmental challenges impacting bee populations, Open Ruche emerges as a crucial ally. By monitoring critical parameters such as temperature, humidity, hive weight, and light exposure, the project doesn't just provide data; it offers a window into the life and health of bee colonies, contributing significantly to global food security and the preservation of biodiversity.
 
-### Bridging the Gap
+### Technical Approach
 
-A core objective of Open Ruche is to bridge the gap between the beekeeping community and environmental researchers. By providing accessible and accurate hive data, the project enables collaboration between these two vital stakeholders. Beekeepers gain valuable insights into the conditions of their hives, allowing for more precise and timely interventions. Environmental researchers, on the other hand, can access a wealth of data to study the impact of environmental factors on bee health.
-
-### Sustainability Commitment
-
-Open Ruche is not just about technology; it's also a testament to sustainability and responsible environmental stewardship. The project embraces a sustainable approach by incorporating renewable energy sources, such as solar panels, to power the monitoring system. This ensures continuous and eco-friendly operation, aligning with the broader goal of promoting sustainable practices in agriculture and environmental monitoring.
-
-In summary, Open Ruche is more than a project; it's a commitment to safeguarding bee populations, fostering collaboration, and advancing the frontiers of IoT technology. It stands as a shining example of how academia, technology, and environmental consciousness can come together to address critical global challenges.
+At the core of Open Ruche is a commitment to precision and reliability. Harnessing the latest in IoT technology, the project ensures that data on beehive conditions is accurately gathered and swiftly delivered. Through a synergy of meticulously chosen sensors and a robust communication framework (LoRaWAN), Open Ruche guarantees that beekeepers and researchers receive timely, actionable information, empowering them to make well-informed decisions.
 
 ## Hardware Details
 
 ### 1. MKRWAN Board
-- The MKRWAN board serves as the core of the monitoring system. It is an Arduino-compatible board specifically designed for LoRaWAN communication, making it an ideal choice for IoT applications. Its compact size and low power consumption are well-suited for remote beehive monitoring.
+- Serving as the cornerstone of the monitoring system, the MKRWAN board is an Arduino-compatible board designed specifically for LoRaWAN communication. Its design is optimized for IoT applications, offering compactness and low power consumption, essential for efficient and unobtrusive beehive monitoring.
 
 ### 2. DHT22 Temperature and Humidity Sensors
-- The DHT22 sensors were carefully chosen for their high accuracy in measuring both temperature and humidity levels inside beehives. These parameters are critical for monitoring bee health and hive conditions.
-- The sensors utilize a single-wire digital interface, ensuring reliable and consistent readings even in challenging environments.
+- Selected for their precision, the DHT22 sensors accurately measure temperature and humidity levels within beehives, providing critical data for monitoring bee health and environmental conditions. Their robust single-wire digital interface ensures reliable readings even in the most demanding settings.
 
-### 3. OneWire Protocol Compatible Temperature Sensors (e.g., DS18B20)
-- OneWire-compatible temperature sensors, such as the DS18B20, are employed to provide precise temperature readings for external conditions around the hive. These sensors are essential for understanding the ambient environment that the bees are exposed to.
-- They utilize the efficient OneWire protocol for digital communication, making them reliable and easy to integrate into the system.
+### 3. DS18B20 Temperature Sensors
+- Employed for their precision in measuring external conditions, DS18B20 sensors are crucial in gauging the ambient environment surrounding the hives. They utilize the OneWire protocol, known for its efficiency and reliability, facilitating seamless integration into the system.
 
-### 5. H401-C3 Load Cell (Connected to HX711 Amplifier)
-- The H401-C3 load cell is a crucial component used for precise weight monitoring of the beehive. This load cell is specifically designed for applications that require accurate and reliable weight measurements.
-- It offers high precision and stability, making it ideal for assessing hive growth and bee activity.
-- The H401-C3 load cell is known for its durability and resistance to environmental factors, ensuring long-term performance even in challenging conditions. It is connected to the HX711 amplifier for signal processing.
+### 4. H401-C3 Load Cell and HX711 Amplifier
+- At the heart of the weight monitoring capabilities lies the H401-C3 load cell, renowned for its precision and reliability. Paired with the HX711 amplifier, known for its low-noise analog-to-digital conversion, this duo forms a robust system capable of providing precise weight measurements, an integral metric for assessing hive health and activity.
 
-### 6. HX711 Load Cell Amplifier
-- The HX711 load cell amplifier is a critical component used to monitor the hive's weight. Tracking the weight of the hive is essential for assessing hive growth and bee activity.
-- This amplifier features low-noise analog-to-digital conversion, ensuring accurate and consistent weight measurements.
+### 5. Photoresistor
+- Incorporated to measure ambient light conditions, the photoresistor provides contextual data, enhancing the understanding of the beehive's external environment. This insight is invaluable in assessing the influence of light on bee behavior and hive activity.
 
-### 7. Photoresistor
-- A photoresistor is integrated into the system to measure ambient light conditions surrounding the beehive. Understanding the external light environment provides valuable context to the data collected by the sensors.
-- The photoresistor assists in assessing the influence of light on bee behavior and hive activity.
+### 6. Buzzer
+- The inclusion of a buzzer adds an auditory dimension to the system, offering real-time feedback and alerts. It serves various purposes, including diagnostics, connection status indication, and alerting beekeepers to specific hive conditions, thereby enhancing user interaction with the monitoring system.
 
-### 8. Buzzer
-- A buzzer is included in the system to provide audible feedback and notifications. It enhances the user interaction with the monitoring system.
-- The buzzer can generate sounds for various purposes, including diagnostics, connection status indication, and alerting beekeepers to specific events or conditions.
-
-### 9. Battery (with TPL5110 for Power Management)
+### 7. Power Supply (LiPo Battery and Solar Panels) and TPL5110 Power Management Module
 - The monitoring system is powered by a rechargeable LiPo battery, ensuring autonomy and continuous operation. The choice of a LiPo battery reflects the project's commitment to sustainability and energy efficiency.
 - To efficiently manage power consumption and extend battery life, the TPL5110 power management module is employed. It ensures that the system operates only when necessary, conserving energy and prolonging battery life.
 
@@ -86,9 +70,8 @@ The integration of a LiPo battery and solar panels in the Open Ruche project pro
 
 These carefully selected components collectively enable the Open Ruche project to collect data effectively, ensuring the well-being of bee colonies and addressing the challenges faced by beekeepers in a sustainable and responsible manner.
 
-
 ### PCB Schematic
-In this section, we provide an overview of the PCB schematic designed for the Open Ruche project. The PCB serves as a central component, featuring connectors for the MKRWAN 1310, interfaces for various sensors, and integration with the TPL5110 for efficient power management.
+- Central to the project, the PCB integrates all the hardware components, ensuring seamless communication and functionality. It features dedicated connectors for the MKRWAN 1310, interfaces for the array of sensors, and the TPL5110 module for power management. The PCB's layout is meticulously designed to accommodate the system's requirements, offering a reliable and efficient platform for the Open Ruche monitoring system.
 
 #### Key Features:
 - **MKRWAN 1310 Interface:** The PCB includes a dedicated interface for seamless connection with the MKRWAN 1310 board. This interface ensures compatibility and efficient data transmission.
@@ -98,11 +81,44 @@ In this section, we provide an overview of the PCB schematic designed for the Op
 - **TPL5110 Integration:** To enhance power management and optimize energy consumption, the PCB integrates the TPL5110 module. This feature contributes to the project's low-power operation.
 
 #### PCB Schematic Image
-![Open Ruche PCB Schematic](./doc/pcb_schematic.jpeg)
+![Open Ruche PCB Schematic](./doc/images/pcb_schematic.jpeg)
 
 The image above displays the actual PCB schematic, providing a visual representation of the board's layout, connectors, and sensor interfaces.
 
-Including this schematic image helps users gain a better understanding of the physical configuration of the PCB, facilitating the replication of the Open Ruche project.
+## Hardware Setup
+
+Setting up the hardware components of the Open Ruche project involves precise connections and configurations to ensure accurate data collection and seamless operation. Below are the detailed steps for connecting each component to the MKRWAN board.
+
+### MKRWAN Board
+- **Core of the System**: The MKRWAN board is the central unit that manages communication and data processing. Connect the board's power source and ensure it's properly configured for LoRaWAN communication.
+
+### DHT22 Temperature and Humidity Sensors
+- **Sensor Connection**: Connect the DHT22 sensors to pins `DHT2_PIN` and `DHT3_PIN` for temperature and humidity monitoring inside the beehive.
+- **Digital Interface**: Utilize a single-wire digital interface for connecting the DHT22 sensors, ensuring stable and reliable data transmission.
+
+### DS18B20 Temperature Sensors
+- **OneWire Protocol**: Connect the DS18B20 sensors to the `ONE_WIRE_BUS` pin. These sensors use the OneWire protocol, allowing multiple sensors to share the same pin for data communication.
+- **Ambient Temperature Monitoring**: Place these sensors in appropriate locations to effectively monitor the external temperature conditions surrounding the hive.
+
+### H401-C3 Load Cell and HX711 Amplifier
+- **Weight Monitoring Setup**: Connect the H401-C3 load cell to the HX711 amplifier, and then interface the amplifier with the `DOUT_PIN` and `CLK_PIN` on the MKRWAN board.
+- **Stable Mounting**: Ensure that the load cell is securely mounted to measure the weight of the beehive accurately.
+
+### Photoresistor
+- **Light Measurement**: Connect the photoresistor to the `photoresistorPin` and `photoResistorVCCpin`. This setup is used to measure the ambient light levels, providing insights into the external light conditions affecting the beehive.
+
+### Buzzer
+- **Audible Feedback**: Attach the buzzer to the `BUZZER_PIN` to enable audio notifications or alerts as part of the system's interaction with the user.
+
+### Power Supply
+- **Battery Connection**: Connect the LiPo battery to the system, ensuring it powers the MKRWAN board and all connected sensors.
+- **Power Management**: Integrate the TPL5110 module with the `DONE_PIN` and `REARM_PIN` for efficient power management. This module helps in reducing the power consumption by putting the system into sleep mode between data transmissions.
+
+### LiPo Battery and Solar Panels Integration
+- **Battery Charging**: Use the LiPo Rider Pro BMS for charging the LiPo battery. Connect the solar panels to the LiPo Rider Pro to harness solar energy for recharging the battery.
+- **Voltage Monitoring**: Connect the `batteryVoltagePin` to the battery's voltage divider output to monitor the battery's voltage and ensure optimal power management.
+
+After completing the hardware setup, ensure all connections are secure and double-check for any possible issues before powering up the system. Proper hardware setup is crucial for the reliability and accuracy of the Open Ruche monitoring system.
 
 
 ## Software Requirements
@@ -153,12 +169,64 @@ Here are the steps to calibrate the weight sensor:
 By following these steps, you can calibrate the weight sensor in the Open Ruche project to provide precise and reliable weight measurements of beehives. Calibration ensures that the system accurately monitors hive growth and provides valuable data to beekeepers.
 
 
-### 5. Upload the Code
-- Open the Arduino sketch provided in the project repository.
-- Upload the code to your MKRWAN board.
+## Code Implementation and Deployment
 
-### 6. Power Up the System
-- Use a battery as the power source and the TPL5110 for efficient power management.
+The software implementation process involves setting up your development environment, downloading the project's code, and uploading it to the MKRWAN board. Follow these steps to get your system up and running:
+
+### Setting Up the Development Environment
+
+1. **Install the Arduino IDE**:
+   - Download and install the Arduino IDE from [the official Arduino website](https://www.arduino.cc/en/software).
+
+2. **Configure the Arduino IDE for MKRWAN Board**:
+   - Open the Arduino IDE.
+   - Go to `Tools > Board > Boards Manager`.
+   - Search for `MKRWAN` and install the board package for the MKRWAN series.
+
+3. **Install Required Libraries**:
+   - Open the Arduino IDE.
+   - Go to `Sketch > Include Library > Manage Libraries`.
+   - Install the following libraries:
+     - `MKRWAN` by Arduino
+     - `DHT sensor library` by Adafruit
+     - `OneWire` by Paul Stoffregen
+     - `DallasTemperature` by Miles Burton
+     - `HX711` by bogde
+     - `ArduinoLowPower` by Arduino
+
+### Downloading the Project Code
+
+1. **Clone the Repository**:
+   - Ensure you have `git` installed on your system. If not, you can download it from [Git SCM](https://git-scm.com/downloads).
+   - Open a terminal or command prompt.
+   - Navigate to the directory where you want to clone the repository.
+   - Run the following command:
+     ```sh
+     git clone https://github.com/OpenRuche-Mahon-Lelong-Zaidi/open-ruche.git
+     ```
+   - This will create a copy of the project in the `open-ruche` directory.
+
+### Uploading the Code to the MKRWAN Board
+
+1. **Open the Project in Arduino IDE**:
+   - Open the Arduino IDE.
+   - Go to `File > Open`.
+   - Navigate to the `open-ruche` directory.
+   - Open the `sendSensorsData.ino` file.
+
+2. **Connect the MKRWAN Board to Your Computer**:
+   - Use a suitable USB cable to connect the MKRWAN board to your computer.
+   - Wait for the drivers to install if it's the first time you are connecting the board.
+
+3. **Select the Correct Board and Port**:
+   - In the Arduino IDE, go to `Tools > Board` and select the appropriate MKRWAN board from the list.
+   - Go to `Tools > Port` and select the port that your MKRWAN board is connected to.
+
+4. **Upload the Code**:
+   - Click the `Upload` button (right arrow icon) in the Arduino IDE.
+   - Wait for the code to compile and upload to the board. You should see a message in the console at the bottom of the Arduino IDE when the upload is successful.
+
+After these steps, your MKRWAN board should be running the Open Ruche software, and you can proceed with the hardware setup and testing.
 
 ## Testing
 
@@ -227,7 +295,68 @@ The payload formatter's code can be found at [this link](https://github.com/Open
 
 ### Data Transmission and visualization
 
-Data is transmitted from the MKRWAN board to TTN, where it is decoded using the payload formatter. TTN then sends the data to the Beep API through a webhook. The [Beep-API](app.beep.nl) allows the visualization and analysis of data from multiple beehives.
+Data is transmitted from the MKRWAN board to TTN, where it is decoded using the payload formatter. Payload is formatted following the Beep API rules. TTN then sends the data to the Beep API through a webhook. The [Beep-API](app.beep.nl) allows the visualization and analysis of data from multiple beehives.
+
+### Beep Application Interface
+
+To provide a clear and user-friendly visualization of the collected data, Open Ruche integrates with the Beep application. Below is a screenshot of the Beep interface showcasing the detailed graphs and analytics generated from the hive data:
+
+![Beep Interface](./doc/images/beep_interface.png)
+
+This interface allows beekeepers and researchers to monitor various parameters such as temperature, humidity, hive weight, and light exposure in an intuitive and interactive manner. The graphs and analytics provide valuable insights, enabling informed decision-making for hive management.
+
+
+The Open Ruche system transmits the collected data to the Beep platform via The Things Network (TTN), offering a comprehensive visualization and analysis of the beehive's conditions. Below are the steps for sending data to Beep from TTN and ensuring the data is properly formatted.
+
+### Sending Data to Beep from TTN
+
+1. **Payload Formatting in TTN**:
+   - The data transmitted by the MKRWAN board to TTN is in a raw binary format. To make this data understandable and usable, it needs to be decoded and formatted correctly.
+   - TTN uses a `Payload Formatter` to convert the raw data into a structured format. The formatter is written in JavaScript and runs within the TTN console.
+
+2. **Example of Payload Formatter**:
+   - Below is an example of a payload formatter script that decodes the data sent from the Open Ruche system:
+     ```javascript
+     function decodeUplink(input) {
+       var data = {};
+       data.key = "3upgcl5ny1se8nva"; // Key for the hive/scale you're sending data to
+       data.l = (input.bytes[1] << 8 | input.bytes[0]);
+       data.t_1 = decodeSignedTemperature(input.bytes[2], input.bytes[3]);
+       data.t_2 = decodeSignedTemperature(input.bytes[4], input.bytes[5]);
+       data.weight_kg = (((input.bytes[7] << 8 | input.bytes[6]) * 10) / 1000).toFixed(2);
+       data.h = ((input.bytes[9] << 8 | input.bytes[8]) / 100).toFixed(2);
+       data.h_I = ((input.bytes[11] << 8 | input.bytes[10]) / 100).toFixed(2);
+       data.t = decodeSignedTemperature(input.bytes[12], input.bytes[13]);
+       data.t_0 = decodeSignedTemperature(input.bytes[14], input.bytes[15]);
+       data.bv = ((input.bytes[17] << 8 | input.bytes[16]) / 100).toFixed(2);
+   
+       return {
+         data: data,
+         warnings: [],
+         errors: []
+       };
+     }
+   
+     function decodeSignedTemperature(lowByte, highByte) {
+       var temp = (highByte << 8) | lowByte;
+       if (temp & 0x8000) {
+         temp = temp - 0x10000;
+       }
+       return (temp / 100).toFixed(2);
+     }
+     ```
+   - This script decodes the temperature, humidity, weight, and other parameters from the received bytes and structures them into a readable format.
+   - Import this script into the TTN console to format the data transmitted by the Open Ruche system. Ensure that the data is formatted correctly as per the Beep API specifications.
+
+3. **Sending Data to Beep**:
+   - Once the data is formatted in TTN, it can be sent to the Beep platform.
+   - Data is sent to Beep using a webhook in the TTN console to the URL provided by the Beep API, in the following format: `https://beep-test.azurewebsites.net/api/yann`.
+   - The request should include the correctly formatted data as per the Beep API specifications.
+
+4. **Beep API and Data Keys**:
+   - The Beep API requires specific keys for different data points (e.g., temperature, humidity, weight). Ensure that the keys in the payload formatter match those expected by the Beep API.
+   - You can find the specific key for your hive/scale in the Beep platform under the 'Data' tab, then by clicking 'Edit devices'.
+   
 
 ## Acknowledgements
 This project is a collaborative effort by students at Polytech Sorbonne: [@wolfyc](https://github.com/wolfyc), [@A-LELONG](https://github.com/A-LELONG), [@gregoiremahon](https://github.com/gregoiremahon), and Chahine Boukhenaissi.
